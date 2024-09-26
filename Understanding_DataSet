@@ -54,7 +54,7 @@ WHERE
   OR
   end_lng IS NULL
 GROUP BY
-  member_casual;
+  1;
 --698 casual, 140 memberships who 'didnt end trip'
 --Is this an important trend?
 ____________________________________________________
@@ -72,7 +72,7 @@ SELECT
 FROM
   rs-project-01-429415.cyclistic_bike_data.202309_tripdata
 GROUP BY
-  member_casual;
+  1;
 --Total 666731, 261635 casual 39.3%, 404736 memberships 60.7% 
 
 
@@ -89,7 +89,7 @@ SELECT
 FROM
   rs-project-01-429415.cyclistic_bike_data.202309_tripdata
 GROUP BY
-  member_casual,
-  rideable_type;
+  1,
+  2;
 --Query shows difference in 'rideable_type' doesn't change percentage of memberships for the Month of September.
 
