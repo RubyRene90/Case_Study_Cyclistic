@@ -1,0 +1,95 @@
+/* CREATED BY: RUBY SMITH
+CREATED ON: 09/24/2024
+GOAL: EXPLORE DATASETS FOR CYCLISTIC BIKE DATA. USING 202309_tripdata.*/
+____________________________________________________
+
+--CHECKING NULL VALUES IN START AND END LOCATIONS
+SELECT
+  *
+FROM
+  rs-project-01-429415.cyclistic_bike_data.202309_tripdata
+WHERE
+  start_station_name IS NULL;
+--101312 results
+
+
+SELECT
+  *
+FROM
+  rs-project-01-429415.cyclistic_bike_data.202309_tripdata
+WHERE
+  end_station_name IS NULL;
+--107291 results
+
+
+SELECT
+  *
+FROM
+  rs-project-01-429415.cyclistic_bike_data.202309_tripdata
+WHERE
+  start_lat IS NULL
+  OR
+  start_lng IS NULL;
+
+
+SELECT
+  *
+FROM
+  rs-project-01-429415.cyclistic_bike_data.202309_tripdata
+WHERE
+  end_lat IS NULL
+  OR
+  end_lng IS NULL;
+--838 results, did customer forget to end ride?
+--for stops with missing latitude and longitude, should these be left out?
+
+
+SELECT
+  member_casual,
+  COUNT(member_casual) AS ride_count
+FROM
+  rs-project-01-429415.cyclistic_bike_data.202309_tripdata
+WHERE
+  end_lat IS NULL
+  OR
+  end_lng IS NULL
+GROUP BY
+  member_casual;
+--698 casual, 140 memberships who 'didnt end trip'
+--Is this an important trend?
+____________________________________________________
+
+--checking the difference in count of membership rides vs non-membership rides (casual)
+SELECT
+  member_casual,
+  COUNT(member_casual) AS ride_count,
+  ROUND((COUNT(member_casual)/
+  (
+    SELECT 
+    COUNT(member_casual) 
+    FROM rs-project-01-429415.cyclistic_bike_data.202309_tripdata
+  ) * 100), 2) AS percent_of_members
+FROM
+  rs-project-01-429415.cyclistic_bike_data.202309_tripdata
+GROUP BY
+  member_casual;
+--Total 666731, 261635 casual 39.3%, 404736 memberships 60.7% 
+
+
+SELECT
+  member_casual,
+  rideable_type,
+  COUNT(member_casual) AS ride_count,
+  ROUND((COUNT(member_casual)/
+  (
+    SELECT 
+    COUNT(member_casual) 
+    FROM rs-project-01-429415.cyclistic_bike_data.202309_tripdata
+  ) * 100), 2) AS percent_of_members
+FROM
+  rs-project-01-429415.cyclistic_bike_data.202309_tripdata
+GROUP BY
+  member_casual,
+  rideable_type;
+--Query shows difference in 'rideable_type' doesn't change percentage of memberships for the Month of September.
+
