@@ -92,4 +92,132 @@ GROUP BY
   1,
   2;
 --Query shows difference in 'rideable_type' doesn't change percentage of memberships for the Month of September.
+____________________________________________________
 
+/* Created By: Ruby Smith
+Created On: 09/26/2024
+Goal: Use UNION ALL to combine datasets and create new table */
+
+--Total results BEFORE removing latitude and longitude NULLs: 5,699,639
+--Total results AFTER removing latitude and longitude NULLs: 5,692,113 (7526 entries removed)
+
+CREATE TABLE cyclistic_bike_data.annual_202309_202408_tripdata AS
+SELECT
+  *
+FROM
+  rs-project-01-429415.cyclistic_bike_data.202309_tripdata
+WHERE
+  start_lat IS NOT NULL
+  AND start_lng IS NOT NULL
+  AND end_lat IS NOT NULL
+  AND end_lng IS NOT NULL
+UNION ALL
+SELECT
+  *
+FROM
+  rs-project-01-429415.cyclistic_bike_data.202310_tripdata
+WHERE
+  start_lat IS NOT NULL
+  AND start_lng IS NOT NULL
+  AND end_lat IS NOT NULL
+  AND end_lng IS NOT NULL
+UNION ALL
+SELECT
+  *
+FROM
+  rs-project-01-429415.cyclistic_bike_data.202311_tripdata
+WHERE
+  start_lat IS NOT NULL
+  AND start_lng IS NOT NULL
+  AND end_lat IS NOT NULL
+  AND end_lng IS NOT NULL
+UNION ALL
+SELECT
+  *
+FROM
+  rs-project-01-429415.cyclistic_bike_data.202312_tripdata
+WHERE
+  start_lat IS NOT NULL
+  AND start_lng IS NOT NULL
+  AND end_lat IS NOT NULL
+  AND end_lng IS NOT NULL
+UNION ALL
+SELECT
+  *
+FROM
+  rs-project-01-429415.cyclistic_bike_data.202401_tripdata
+WHERE
+  start_lat IS NOT NULL
+  AND start_lng IS NOT NULL
+  AND end_lat IS NOT NULL
+  AND end_lng IS NOT NULL
+UNION ALL
+SELECT
+  *
+FROM
+  rs-project-01-429415.cyclistic_bike_data.202402_tripdata
+WHERE
+  start_lat IS NOT NULL
+  AND start_lng IS NOT NULL
+  AND end_lat IS NOT NULL
+  AND end_lng IS NOT NULL
+UNION ALL
+SELECT
+  *
+FROM
+  rs-project-01-429415.cyclistic_bike_data.202403_tripdata
+WHERE
+  start_lat IS NOT NULL
+  AND start_lng IS NOT NULL
+  AND end_lat IS NOT NULL
+  AND end_lng IS NOT NULL
+UNION ALL
+SELECT
+  *
+FROM
+  rs-project-01-429415.cyclistic_bike_data.202404_tripdata
+WHERE
+  start_lat IS NOT NULL
+  AND start_lng IS NOT NULL
+  AND end_lat IS NOT NULL
+  AND end_lng IS NOT NULL
+UNION ALL
+SELECT
+  *
+FROM
+  rs-project-01-429415.cyclistic_bike_data.202405_tripdata
+WHERE
+  start_lat IS NOT NULL
+  AND start_lng IS NOT NULL
+  AND end_lat IS NOT NULL
+  AND end_lng IS NOT NULL
+UNION ALL
+SELECT
+  *
+FROM
+  rs-project-01-429415.cyclistic_bike_data.202406_tripdata
+WHERE
+  start_lat IS NOT NULL
+  AND start_lng IS NOT NULL
+  AND end_lat IS NOT NULL
+  AND end_lng IS NOT NULL
+UNION ALL
+SELECT
+  *
+FROM
+  rs-project-01-429415.cyclistic_bike_data.202407_tripdata
+WHERE
+  start_lat IS NOT NULL
+  AND start_lng IS NOT NULL
+  AND end_lat IS NOT NULL
+  AND end_lng IS NOT NULL
+UNION ALL
+SELECT
+  *
+FROM
+  rs-project-01-429415.cyclistic_bike_data.202408_tripdata
+WHERE
+  start_lat IS NOT NULL
+  AND start_lng IS NOT NULL
+  AND end_lat IS NOT NULL
+  AND end_lng IS NOT NULL;
