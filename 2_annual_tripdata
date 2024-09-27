@@ -8,6 +8,85 @@ FROM
   rs-project-01-429415.cyclistic_bike_data.annual_202309_202408_tripdata
 LIMIT
 50;
+_______________________________________________
+--Used to check dates were downloaded and all months are present.
+--Count represents the amount of results after nulls removed from each dataset.
+
+SELECT
+  EXTRACT(MONTH FROM started_at),
+  COUNT(EXTRACT(MONTH FROM started_at))
+FROM
+  rs-project-01-429415.cyclistic_bike_data.annual_202309_202408_tripdata
+GROUP BY
+  EXTRACT(MONTH FROM started_at);
+_______________________________________________
+--checking for duplicates (171 duplicated ride_id)
+
+SELECT
+  ride_id,
+  COUNT(ride_id)
+FROM
+  rs-project-01-429415.cyclistic_bike_data.annual_202309_202408_tripdata
+GROUP BY
+  ride_id
+HAVING
+  COUNT(ride_id) > 1;
+
+--Query below shows all duplicates
+--all entries that were from 5/31 and went through 6/01 duplicated. 
+
+SELECT
+  annual.*
+FROM
+(
+  SELECT
+    ride_id,
+    COUNT(ride_id)
+  FROM
+    rs-project-01-429415.cyclistic_bike_data.annual_202309_202408_tripdata
+  GROUP BY
+    ride_id
+  HAVING
+    COUNT(ride_id) > 1
+) AS dupl
+JOIN
+  rs-project-01-429415.cyclistic_bike_data.annual_202309_202408_tripdata AS annual
+ON
+dupl.ride_id = annual.ride_id
+ORDER BY
+  annual.ride_id;
+
+--Partitioned to create rank to seperate duplicates. Filtered out duplicates and created an updated table.
+
+CREATE TABLE rs-project-01-429415.cyclistic_bike_data.annual_202309_202408_tripdata2 AS
+SELECT
+  ride_id,
+  rideable_type,
+  started_at,
+  ended_at,
+  trip_time_seconds,
+  start_station_name,
+  start_station_id,
+  end_station_name,
+  end_station_id,
+  start_lat,
+  start_lng,
+  end_lat,
+  end_lng,
+  member_casual
+FROM
+(
+Select
+  *,
+  ROW_NUMBER() OVER 
+    (PARTITION BY
+      ride_id) AS r_n
+FROM
+  rs-project-01-429415.cyclistic_bike_data.annual_202309_202408_tripdata
+)
+WHERE
+  r_n = 1;
+_______________________________________________
 
 --I want to isolate the 'trip time' of each bike ride.
 SELECT
@@ -15,18 +94,28 @@ SELECT
   ended_at,
   DATE_DIFF(ended_at, started_at, second) AS trip_time_seconds 
 FROM
-  rs-project-01-429415.cyclistic_bike_data.annual_202309_202408_tripdata
+  rs-project-01-429415.cyclistic_bike_data.annual_202309_202408_tripdata2
 ORDER BY
   3 DESC
 LIMIT
   1000;
-______________________________________________________
+
 --I will add new column named 'trip_time_seconds' to annual dataset with trip time added for each row.
 
-ALTER TABLE rs-project-01-429415.cyclistic_bike_data.annual_202309_202408_tripdata
+ALTER TABLE rs-project-01-429415.cyclistic_bike_data.annual_202309_202408_tripdata2
 ADD COLUMN trip_time_seconds INT64;
 
-UPDATE rs-project-01-429415.cyclistic_bike_data.annual_202309_202408_tripdata
+UPDATE rs-project-01-429415.cyclistic_bike_data.annual_202309_202408_tripdata2
 SET trip_time_seconds = DATE_DIFF(ended_at, started_at, second)
 WHERE trip_time_seconds IS NULL;
-______________________________________________________
+
+
+--I want to isolate the date datatype from timestamp datatype in the started_at and ended_at columns.
+SELECT 
+ CAST(started_at AS DATE),
+ CAST(ended_at AS DATE)
+FROM
+  rs-project-01-429415.cyclistic_bike_data.annual_202309_202408_tripdata2
+LIMIT
+  1000;
+
