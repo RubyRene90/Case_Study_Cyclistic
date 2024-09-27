@@ -68,7 +68,8 @@ SELECT
     SELECT 
     COUNT(member_casual) 
     FROM rs-project-01-429415.cyclistic_bike_data.202309_tripdata
-  ) * 100), 2) AS percent_of_members
+  ) 
+  * 100), 2) AS percent_of_members
 FROM
   rs-project-01-429415.cyclistic_bike_data.202309_tripdata
 GROUP BY
@@ -85,7 +86,8 @@ SELECT
     SELECT 
     COUNT(member_casual) 
     FROM rs-project-01-429415.cyclistic_bike_data.202309_tripdata
-  ) * 100), 2) AS percent_of_members
+  ) 
+  * 100), 2) AS percent_of_members
 FROM
   rs-project-01-429415.cyclistic_bike_data.202309_tripdata
 GROUP BY
@@ -100,6 +102,7 @@ Goal: Use UNION ALL to combine datasets and create new table */
 
 --Total results BEFORE removing latitude and longitude NULLs: 5,699,639
 --Total results AFTER removing latitude and longitude NULLs: 5,692,113 (7526 entries removed)
+--I want to check data geographically, and won't be able to check NULLs.
 
 CREATE TABLE cyclistic_bike_data.annual_202309_202408_tripdata AS
 SELECT
