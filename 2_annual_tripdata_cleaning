@@ -64,7 +64,6 @@ SELECT
   rideable_type,
   started_at,
   ended_at,
-  trip_time_seconds,
   start_station_name,
   start_station_id,
   end_station_name,
@@ -87,12 +86,15 @@ FROM
 WHERE
   r_n = 1;
 _______________________________________________
+/* CREATED BY: RUBY SMITH
+CREATED ON: 9/27/2024
+GOAL: start manipulating the data */
 
 --I want to isolate the 'trip time' of each bike ride.
 SELECT
   started_at,
   ended_at,
-  DATE_DIFF(ended_at, started_at, second) AS trip_time_seconds 
+  TIMESTAMP_DIFF(ended_at, started_at, second) AS trip_time_seconds 
 FROM
   rs-project-01-429415.cyclistic_bike_data.annual_202309_202408_tripdata2
 ORDER BY
@@ -106,11 +108,11 @@ ALTER TABLE rs-project-01-429415.cyclistic_bike_data.annual_202309_202408_tripda
 ADD COLUMN trip_time_seconds INT64;
 
 UPDATE rs-project-01-429415.cyclistic_bike_data.annual_202309_202408_tripdata2
-SET trip_time_seconds = DATE_DIFF(ended_at, started_at, second)
+SET trip_time_seconds = TIMESTAMP_DIFF(ended_at, started_at, second)
 WHERE trip_time_seconds IS NULL;
-
-
+_______________________________________________
 --I want to isolate the date datatype from timestamp datatype in the started_at and ended_at columns.
+
 SELECT 
  CAST(started_at AS DATE),
  CAST(ended_at AS DATE)
@@ -119,3 +121,42 @@ FROM
 LIMIT
   1000;
 
+--Creating 2 new columns for separated start_date and end_date
+ALTER TABLE rs-project-01-429415.cyclistic_bike_data.annual_202309_202408_tripdata2
+ADD COLUMN start_date DATE,
+ADD COLUMN end_date DATE;
+
+UPDATE rs-project-01-429415.cyclistic_bike_data.annual_202309_202408_tripdata2
+SET 
+  start_date = CAST(started_at AS DATE), 
+  end_date = CAST(ended_at AS DATE)
+WHERE
+ start_date IS NULL
+ AND end_date IS NULL;
+_______________________________________________
+
+--Use below query to double check if trip_time what calculated correctly between dates.
+SELECT
+  *
+FROM 
+  rs-project-01-429415.cyclistic_bike_data.annual_202309_202408_tripdata2
+WHERE
+  start_date <> end_date;
+_______________________________________________
+
+--Create a column with days of the week from start_date.
+
+SELECT
+  start_date,
+  FORMAT_DATE('%A', start_date)
+FROM
+  rs-project-01-429415.cyclistic_bike_data.annual_202309_202408_tripdata2
+LIMIT
+50;
+
+ALTER TABLE rs-project-01-429415.cyclistic_bike_data.annual_202309_202408_tripdata2
+ADD COLUMN day_of_ride STRING;
+
+UPDATE rs-project-01-429415.cyclistic_bike_data.annual_202309_202408_tripdata2
+SET day_of_ride = FORMAT_DATE('%A', start_date)
+WHERE day_of_ride IS NULL;
