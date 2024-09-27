@@ -1,0 +1,32 @@
+/* CREATED BY: RUBY SMITH
+CREATED ON: 09/26/2024
+GOAL: Understand annual_tripdata*/
+
+SELECT
+  *
+FROM
+  rs-project-01-429415.cyclistic_bike_data.annual_202309_202408_tripdata
+LIMIT
+50;
+
+--I want to isolate the 'trip time' of each bike ride.
+SELECT
+  started_at,
+  ended_at,
+  DATE_DIFF(ended_at, started_at, second) AS trip_time_seconds 
+FROM
+  rs-project-01-429415.cyclistic_bike_data.annual_202309_202408_tripdata
+ORDER BY
+  3 DESC
+LIMIT
+  1000;
+______________________________________________________
+--I will add new column named 'trip_time_seconds' to annual dataset with trip time added for each row.
+
+ALTER TABLE rs-project-01-429415.cyclistic_bike_data.annual_202309_202408_tripdata
+ADD COLUMN trip_time_seconds INT64;
+
+UPDATE rs-project-01-429415.cyclistic_bike_data.annual_202309_202408_tripdata
+SET trip_time_seconds = DATE_DIFF(ended_at, started_at, second)
+WHERE trip_time_seconds IS NULL;
+______________________________________________________
