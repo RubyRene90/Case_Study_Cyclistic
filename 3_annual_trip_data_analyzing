@@ -1,0 +1,135 @@
+/*CREATED BY: RUBY SMITH
+CREATED ON: 10/01/2024
+GOAL: RUN SOME BASIC AGGREGATE DATA AND IMPORT RESULTS INTO GOOGLE SHEETS FOR ANALYSIS*/
+
+--annual results
+SELECT
+  member_casual AS member_status,
+  COUNT(member_casual) AS member_count,
+  ROUND((COUNT(member_casual)/
+  (
+    SELECT 
+    COUNT(member_casual) 
+    FROM rs-project-01-429415.cyclistic_bike_data.annual_202309_202408_tripdata2
+  ) 
+  * 100), 2) AS percent_of_members,
+  ROUND(AVG(trip_time_seconds), 2) AS annual_avg,
+  ROUND(MIN(trip_time_seconds), 2) AS annual_min,
+  ROUND(MAX(trip_time_seconds), 2) AS annual_max
+FROM
+  `rs-project-01-429415.cyclistic_bike_data.annual_202309_202408_tripdata2`
+GROUP BY
+  member_casual;
+______________________________________________________
+SELECT
+  *
+FROM
+  rs-project-01-429415.cyclistic_bike_data.annual_202309_202408_tripdata2
+WHERE 
+  trip_time_seconds < 0;
+--The MIN trip time was negative, issue with ride entry. 344 Rows
+
+DELETE
+  rs-project-01-429415.cyclistic_bike_data.annual_202309_202408_tripdata2
+WHERE
+trip_time_seconds < 0;
+--Removed rows with negative trip time after verifying original columns, started_at and ended_at
+______________________________________________________
+SELECT
+  *
+FROM
+  rs-project-01-429415.cyclistic_bike_data.annual_202309_202408_tripdata2
+WHERE 
+  trip_time_seconds > 86400;
+--The MAX trip time was over 24 hours long, wanted to look into. 389 rows over 24 hours.
+
+DELETE
+  rs-project-01-429415.cyclistic_bike_data.annual_202309_202408_tripdata2
+WHERE
+trip_time_seconds > 86400;
+--Removed rows with trip time over 24 hours after verifyinf original columns, started_at and ended_at
+______________________________________________________
+--Run aggregates monthly, by membership.
+______________________________________________________
+--Casual Riders aggregations
+SELECT
+  FORMAT_DATE('%m', start_date) AS month,
+  COUNT(member_casual) AS member_count,
+  ROUND((COUNT(member_casual)/
+  (
+    SELECT 
+      COUNT(member_casual) 
+    FROM rs-project-01-429415.cyclistic_bike_data.annual_202309_202408_tripdata2
+    WHERE 
+      member_casual LIKE 'casual'
+  ) 
+  * 100), 2) AS percent_of_members,
+  ROUND(AVG(trip_time_seconds), 2) AS annual_avg,
+  ROUND(MIN(trip_time_seconds), 2) AS annual_min,
+  ROUND(MAX(trip_time_seconds), 2) AS annual_max
+FROM
+  `rs-project-01-429415.cyclistic_bike_data.annual_202309_202408_tripdata2`
+WHERE 
+  member_casual LIKE 'casual'
+GROUP BY 
+  month
+ORDER BY
+  month;
+
+
+--separate casual rides by bike type classic and electric
+SELECT
+  FORMAT_DATE('%m', start_date) AS month,
+  COUNT(rideable_type)
+FROM
+  `rs-project-01-429415.cyclistic_bike_data.annual_202309_202408_tripdata2`
+WHERE
+  member_casual LIKE 'casual'
+  AND
+  rideable_type LIKE 'classic_bike'
+GROUP BY
+month
+ORDER BY
+month;
+______________________________________________________
+--Annual Membership Aggregates
+SELECT
+  FORMAT_DATE('%m', start_date) AS month,
+  COUNT(member_casual) AS member_count,
+  ROUND((COUNT(member_casual)/
+  (
+    SELECT 
+      COUNT(member_casual) 
+    FROM rs-project-01-429415.cyclistic_bike_data.annual_202309_202408_tripdata2
+    WHERE 
+      member_casual LIKE 'member'
+  ) 
+  * 100), 2) AS percent_of_members,
+  ROUND(AVG(trip_time_seconds), 2) AS annual_avg,
+  ROUND(MIN(trip_time_seconds), 2) AS annual_min,
+  ROUND(MAX(trip_time_seconds), 2) AS annual_max
+FROM
+  `rs-project-01-429415.cyclistic_bike_data.annual_202309_202408_tripdata2`
+WHERE 
+  member_casual LIKE 'member'
+GROUP BY 
+  month
+ORDER BY
+  month;
+  
+
+--separate members by bike type classic and electric
+SELECT
+  FORMAT_DATE('%m', start_date) AS month,
+  COUNT(rideable_type)
+FROM
+  `rs-project-01-429415.cyclistic_bike_data.annual_202309_202408_tripdata2`
+WHERE
+  member_casual LIKE 'member'
+  AND
+  rideable_type LIKE 'classic_bike'
+GROUP BY
+month
+ORDER BY
+month;
+______________________________________________________
