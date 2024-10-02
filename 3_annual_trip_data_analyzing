@@ -49,6 +49,17 @@ WHERE
 trip_time_seconds > 86400;
 --Removed rows with trip time over 24 hours after verifyinf original columns, started_at and ended_at
 ______________________________________________________
+--count of bike type used annually
+SELECT
+  member_casual,
+  COUNT(rideable_type)
+FROM
+  `rs-project-01-429415.cyclistic_bike_data.annual_202309_202408_tripdata2`
+WHERE
+  rideable_type LIKE 'electric_bike'
+GROUP BY
+  member_casual;
+______________________________________________________
 --Run aggregates monthly, by membership.
 ______________________________________________________
 --Casual Riders aggregations
@@ -92,7 +103,7 @@ month
 ORDER BY
 month;
 ______________________________________________________
---Annual Membership Aggregates
+--Membership Aggregates
 SELECT
   FORMAT_DATE('%m', start_date) AS month,
   COUNT(member_casual) AS member_count,
