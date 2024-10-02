@@ -1,0 +1,116 @@
+/*CREATED BY: RUBY SMITH
+CREATED ON: 10/02/2024
+GOAL: RUN AGGREGATE DATA ON WEEKLY RESULTS*/
+
+SELECT
+  day_of_ride,
+  COUNT(day_of_ride)
+FROM
+  rs-project-01-429415.cyclistic_bike_data.annual_202309_202408_tripdata2
+GROUP BY
+  day_of_ride
+ORDER BY
+  day_of_ride;
+___________________________________________
+--analyze weekly by membership
+___________________________________________
+
+--casual(nonmembership)
+SELECT
+  day_of_ride,
+  COUNT(day_of_ride) AS CountOfRides,
+  ROUND(AVG(trip_time_seconds), 2) AS avg_triptime,
+  ROUND(MIN(trip_time_seconds), 2) AS week_min,
+  ROUND(MAX(trip_time_seconds), 2) AS week_max
+FROM
+  rs-project-01-429415.cyclistic_bike_data.annual_202309_202408_tripdata2
+WHERE
+  member_casual LIKE 'casual'
+GROUP BY
+  day_of_ride
+ORDER BY
+  day_of_ride;
+
+--find rideable_type for casuals: classic vs electric
+SELECT
+  day_of_ride,
+  COUNT(rideable_type)
+FROM
+  `rs-project-01-429415.cyclistic_bike_data.annual_202309_202408_tripdata2`
+WHERE
+  member_casual LIKE 'casual'
+  AND
+  rideable_type LIKE 'electric_bike'
+GROUP BY
+  day_of_ride
+ORDER BY
+  day_of_ride;
+___________________________________________
+
+--membership
+SELECT
+  day_of_ride,
+  COUNT(day_of_ride) AS CountOfRides,
+  ROUND(AVG(trip_time_seconds), 2) AS avg_triptime,
+  ROUND(MIN(trip_time_seconds), 2) AS week_min,
+  ROUND(MAX(trip_time_seconds), 2) AS week_max
+FROM
+  rs-project-01-429415.cyclistic_bike_data.annual_202309_202408_tripdata2
+WHERE
+  member_casual LIKE 'member'
+GROUP BY
+  day_of_ride
+ORDER BY
+  day_of_ride;
+
+--find rideable_type for members: classic vs electric
+SELECT
+  day_of_ride,
+  COUNT(rideable_type)
+FROM
+  `rs-project-01-429415.cyclistic_bike_data.annual_202309_202408_tripdata2`
+WHERE
+  member_casual LIKE 'member'
+  AND
+  rideable_type LIKE 'classic_bike'
+GROUP BY
+  day_of_ride
+ORDER BY
+  day_of_ride;
+___________________________________________
+--Holiday Aggregates
+___________________________________________
+
+--members
+SELECT
+  start_date,
+  COUNT(start_date) AS countofrides,
+  ROUND(AVG(trip_time_seconds), 2) AS avg_triptime,
+  ROUND(MIN(trip_time_seconds), 2) AS holiday_min,
+  ROUND(MAX(trip_time_seconds), 2) AS holiday_max
+FROM
+  rs-project-01-429415.cyclistic_bike_data.annual_202309_202408_tripdata2
+WHERE
+  member_casual LIKE 'member'
+  AND start_date IN ('2023-09-04', '2023-10-09', '2023-11-10', '2023-11-23', '2023-12-25', '2024-01-01', '2024-01-15', '2024-05-27', '2024-06-19', '2024-07-04')
+GROUP BY
+  start_date
+ORDER BY
+  start_date;
+
+--casuals(nonmembers)
+SELECT
+  start_date,
+  COUNT(start_date) AS count_of_rides,
+  ROUND(AVG(trip_time_seconds), 2) AS avg_triptime,
+  ROUND(MIN(trip_time_seconds), 2) AS holiday_min,
+  ROUND(MAX(trip_time_seconds), 2) AS holiday_max
+FROM
+  rs-project-01-429415.cyclistic_bike_data.annual_202309_202408_tripdata2
+WHERE
+  member_casual LIKE 'casual'
+  AND start_date IN ('2023-09-04', '2023-10-09', '2023-11-10', '2023-11-23', '2023-12-25', '2024-01-01', '2024-01-15', '2024-05-27', '2024-06-19', '2024-07-04')
+GROUP BY
+  start_date
+ORDER BY
+  start_date;
