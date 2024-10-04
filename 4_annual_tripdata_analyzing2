@@ -78,43 +78,6 @@ GROUP BY
 ORDER BY
   day_of_ride;
 ___________________________________________
---Holiday Aggregates
-___________________________________________
-
---members
-SELECT
-  start_date,
-  COUNT(start_date) AS countofrides,
-  ROUND(AVG(trip_time_seconds), 2) AS avg_triptime,
-  ROUND(MIN(trip_time_seconds), 2) AS holiday_min,
-  ROUND(MAX(trip_time_seconds), 2) AS holiday_max
-FROM
-  rs-project-01-429415.cyclistic_bike_data.annual_202309_202408_tripdata2
-WHERE
-  member_casual LIKE 'member'
-  AND start_date IN ('2023-09-04', '2023-10-09', '2023-11-10', '2023-11-23', '2023-12-25', '2024-01-01', '2024-01-15', '2024-05-27', '2024-06-19', '2024-07-04')
-GROUP BY
-  start_date
-ORDER BY
-  start_date;
-___________________________________________
---casuals(nonmembers)
-SELECT
-  start_date,
-  COUNT(start_date) AS count_of_rides,
-  ROUND(AVG(trip_time_seconds), 2) AS avg_triptime,
-  ROUND(MIN(trip_time_seconds), 2) AS holiday_min,
-  ROUND(MAX(trip_time_seconds), 2) AS holiday_max
-FROM
-  rs-project-01-429415.cyclistic_bike_data.annual_202309_202408_tripdata2
-WHERE
-  member_casual LIKE 'casual'
-  AND start_date IN ('2023-09-04', '2023-10-09', '2023-11-10', '2023-11-23', '2023-12-25', '2024-01-01', '2024-01-15', '2024-05-27', '2024-06-19', '2024-07-04')
-GROUP BY
-  start_date
-ORDER BY
-  start_date;
-___________________________________________
 --used to calculate how many riders are above or below avg.
 ___________________________________________
 --members
