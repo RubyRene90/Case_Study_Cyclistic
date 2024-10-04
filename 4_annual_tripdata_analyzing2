@@ -152,3 +152,43 @@ WHERE
   )
   AND
     member_casual LIKE 'casual';
+___________________________________________
+--checking how many people are below 1, 1-5, and 5-10 min of usage, etc.
+SELECT
+  COUNT(member_casual)
+FROM
+  rs-project-01-429415.cyclistic_bike_data.annual_202309_202408_tripdata2
+WHERE 
+  trip_time_seconds > 3600
+  AND
+  trip_time_seconds < 10800; --change amount of time to count how many rides of that time
+
+SELECT
+  member_casual,
+  COUNT(member_casual)
+FROM
+  rs-project-01-429415.cyclistic_bike_data.annual_202309_202408_tripdata2
+WHERE 
+  trip_time_seconds > 3600
+  and
+  trip_time_seconds < 10800     --change amount of time to count how many rides of that time
+GROUP BY
+  member_casual;
+___________________________________________
+--checking how many people are at or above 3hr of usage.
+SELECT
+  COUNT(member_casual)
+FROM
+  rs-project-01-429415.cyclistic_bike_data.annual_202309_202408_tripdata2
+WHERE 
+  trip_time_seconds >= 10800; --change amount of time to count how many rides of that time
+
+SELECT
+  member_casual,
+  COUNT(member_casual)
+FROM
+  rs-project-01-429415.cyclistic_bike_data.annual_202309_202408_tripdata2
+WHERE 
+  trip_time_seconds >= 10800 --change amount of time to count how many rides of that time
+GROUP BY
+  member_casual;
