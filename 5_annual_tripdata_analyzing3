@@ -1,0 +1,63 @@
+/* CREATED BY:RUBY SMITH
+CREATED ON: 10/04/2024
+GOAL: ANALYZE DATA BY POPULAR STATION NAMES */
+
+SELECT
+  start_station_name,
+  COUNT(start_station_name) AS count_of_start
+FROM
+  rs-project-01-429415.cyclistic_bike_data.annual_202309_202408_tripdata2
+GROUP BY
+  start_station_name
+ORDER BY 
+  2 DESC
+LIMIT
+10;
+_______________________________
+SELECT
+  end_station_name,
+  COUNT(end_station_name) AS count_of_end
+FROM
+  rs-project-01-429415.cyclistic_bike_data.annual_202309_202408_tripdata2
+GROUP BY
+  end_station_name
+ORDER BY 
+  2 DESC
+LIMIT
+10;
+_______________________________
+
+--created concatenated column for routes to count popular routes.
+SELECT
+  CONCAT(start_station_name," TO ", end_station_name) AS route_concat
+FROM
+  rs-project-01-429415.cyclistic_bike_data.annual_202309_202408_tripdata2;
+
+
+--use concat query in a subquery to find count of routes
+SELECT
+  route_concat,
+  COUNT(route_concat) AS count_of_route
+FROM
+  (
+    SELECT
+  CONCAT(start_station_name," TO ", end_station_name) AS route_concat
+FROM
+  rs-project-01-429415.cyclistic_bike_data.annual_202309_202408_tripdata2
+  )
+GROUP BY
+  route_concat
+ORDER BY
+  2 DESC
+LIMIT
+ 10;
+_______________________________
+--How many routes start and end at the same location and average trip time
+
+SELECT
+  COUNT(start_station_name) AS Count_routeS,
+  ROUND(AVG(trip_time_seconds), 2) AS avg_routeS
+FROM
+  rs-project-01-429415.cyclistic_bike_data.annual_202309_202408_tripdata2
+WHERE
+  start_station_name = end_station_name;
