@@ -4,6 +4,15 @@ GOAL: RUN SOME BASIC AGGREGATE DATA AND IMPORT RESULTS INTO GOOGLE SHEETS FOR AN
 
 --annual results
 SELECT
+  COUNT(member_casual) AS member_count,
+  ROUND(AVG(trip_time_seconds), 2) AS annual_avg,
+  ROUND(MIN(trip_time_seconds), 2) AS annual_min,
+  ROUND(MAX(trip_time_seconds), 2) AS annual_max
+FROM
+  `rs-project-01-429415.cyclistic_bike_data.annual_202309_202408_tripdata2`;
+______________________________________________________
+--annual results grouped by member_casual
+SELECT
   member_casual AS member_status,
   COUNT(member_casual) AS member_count,
   ROUND((COUNT(member_casual)/
@@ -21,6 +30,7 @@ FROM
 GROUP BY
   member_casual;
 ______________________________________________________
+
 SELECT
   *
 FROM
