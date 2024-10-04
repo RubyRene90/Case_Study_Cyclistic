@@ -97,7 +97,7 @@ GROUP BY
   start_date
 ORDER BY
   start_date;
-
+___________________________________________
 --casuals(nonmembers)
 SELECT
   start_date,
@@ -114,3 +114,41 @@ GROUP BY
   start_date
 ORDER BY
   start_date;
+___________________________________________
+--used to calculate how many riders are above or below avg.
+___________________________________________
+--members
+SELECT
+  COUNT(member_casual) AS count_of_riders
+FROM
+  `rs-project-01-429415.cyclistic_bike_data.annual_202309_202408_tripdata2`
+WHERE
+  trip_time_seconds <   --change sign to get opposite results
+  (
+    SELECT
+      AVG(trip_time_seconds)
+    FROM
+      `rs-project-01-429415.cyclistic_bike_data.annual_202309_202408_tripdata2`
+    WHERE
+      member_casual LIKE 'member'
+  )
+  AND
+    member_casual LIKE 'member';
+___________________________________________
+--casuals
+SELECT
+  COUNT(member_casual) AS count_of_riders
+FROM
+  `rs-project-01-429415.cyclistic_bike_data.annual_202309_202408_tripdata2`
+WHERE
+  trip_time_seconds >    --change sign to get opposite results.
+  (
+    SELECT
+      AVG(trip_time_seconds)
+    FROM
+      `rs-project-01-429415.cyclistic_bike_data.annual_202309_202408_tripdata2`
+    WHERE
+      member_casual LIKE 'casual'
+  )
+  AND
+    member_casual LIKE 'casual';
