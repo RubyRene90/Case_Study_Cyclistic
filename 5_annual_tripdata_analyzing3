@@ -28,8 +28,8 @@ LIMIT
 
 SELECT
   popM.start_station_name,
-  ROUND(AVG(main.start_lat), 2) AS start_lat,
-  ROUND(AVG(main.start_lng), 2) AS start_lng
+  ROUND(AVG(main.start_lat), 5) AS start_lat,
+  ROUND(AVG(main.start_lng), 5) AS start_lng
 FROM
   rs-project-01-429415.cyclistic_bike_data.annual_202309_202408_tripdata2 AS main
 JOIN (SELECT
@@ -80,8 +80,8 @@ LIMIT
 
 SELECT
   popM.end_station_name,
-  ROUND(AVG(main.end_lat), 2) AS end_lat,
-  ROUND(AVG(main.end_lng), 2) AS end_lng
+  ROUND(AVG(main.end_lat), 5) AS end_lat,
+  ROUND(AVG(main.end_lng), 5) AS end_lng
 FROM
   rs-project-01-429415.cyclistic_bike_data.annual_202309_202408_tripdata2 AS main
 JOIN (SELECT
@@ -132,8 +132,8 @@ LIMIT
 
 SELECT
   popM.start_station_name,
-  ROUND(AVG(main.start_lat), 2) AS start_lat,
-  ROUND(AVG(main.start_lng), 2) AS start_long
+  ROUND(AVG(main.start_lat), 5) AS start_lat,
+  ROUND(AVG(main.start_lng), 5) AS start_long
 FROM
   rs-project-01-429415.cyclistic_bike_data.annual_202309_202408_tripdata2 AS main
 JOIN (SELECT
@@ -184,8 +184,8 @@ LIMIT
 
 SELECT
   popM.end_station_name,
-  ROUND(AVG(main.end_lat), 2) AS end_lat,
-  ROUND(AVG(main.end_lng), 2) AS end_lng
+  ROUND(AVG(main.end_lat), 5) AS end_lat,
+  ROUND(AVG(main.end_lng), 5) AS end_lng
 FROM
   rs-project-01-429415.cyclistic_bike_data.annual_202309_202408_tripdata2 AS main
 JOIN (SELECT
