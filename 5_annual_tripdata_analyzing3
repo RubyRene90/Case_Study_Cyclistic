@@ -1,38 +1,7 @@
 /* CREATED BY:RUBY SMITH
 CREATED ON: 10/04/2024
-GOAL: ANALYZE DATA BY POPULAR STATION NAMES */
-
-SELECT
-  start_station_name,
-  COUNT(start_station_name) AS count_of_start
-FROM
-  rs-project-01-429415.cyclistic_bike_data.annual_202309_202408_tripdata2
-GROUP BY
-  start_station_name
-ORDER BY 
-  2 DESC
-LIMIT
-10;
+GOAL: ANALYZE DATA BY POPULAR STATION NAMES AND PULL LATITUDE AND LONGITUDE FROM DATA BY USING JOIN */
 _______________________________
-SELECT
-  end_station_name,
-  COUNT(end_station_name) AS count_of_end
-FROM
-  rs-project-01-429415.cyclistic_bike_data.annual_202309_202408_tripdata2
-GROUP BY
-  end_station_name
-ORDER BY 
-  2 DESC
-LIMIT
-10;
-_______________________________
-
---created concatenated column for routes to count popular routes.
-SELECT
-  CONCAT(start_station_name," TO ", end_station_name) AS route_concat
-FROM
-  rs-project-01-429415.cyclistic_bike_data.annual_202309_202408_tripdata2;
-
 
 --use concat query in a subquery to find count of routes
 SELECT
@@ -50,14 +19,222 @@ GROUP BY
 ORDER BY
   2 DESC
 LIMIT
- 10;
+ 20;
 _______________________________
---How many routes start and end at the same location and average trip time
+
+--most popular member start stations
+SELECT
+  start_station_name,
+  COUNT(start_station_name) AS count_of_start
+FROM
+  (
+  SELECT
+    *
+  FROM
+    rs-project-01-429415.cyclistic_bike_data.annual_202309_202408_tripdata2
+  WHERE
+    member_casual LIKE 'member'
+  )
+GROUP BY
+  start_station_name
+ORDER BY 
+  2 DESC
+LIMIT
+  20;
+
+--Get member start latitude and longitude from TOP 20 start stations
 
 SELECT
-  COUNT(start_station_name) AS Count_routeS,
-  ROUND(AVG(trip_time_seconds), 2) AS avg_routeS
+  popM.start_station_name,
+  ROUND(AVG(main.start_lat), 2) AS start_lat,
+  ROUND(AVG(main.start_lng), 2) AS start_lng
 FROM
-  rs-project-01-429415.cyclistic_bike_data.annual_202309_202408_tripdata2
-WHERE
-  start_station_name = end_station_name;
+  rs-project-01-429415.cyclistic_bike_data.annual_202309_202408_tripdata2 AS main
+JOIN (SELECT
+  start_station_name,
+  COUNT(start_station_name) AS count_of_start
+FROM
+  (
+  SELECT
+    *
+  FROM
+    rs-project-01-429415.cyclistic_bike_data.annual_202309_202408_tripdata2
+  WHERE
+    member_casual LIKE 'member'
+  )
+  GROUP BY
+    start_station_name
+  ORDER BY 
+    2 DESC
+  LIMIT
+    20) AS popM
+ON
+  main.start_station_name = popM.start_station_name
+GROUP BY
+  popM.start_station_name;
+_______________________________
+--most popular member end station names
+
+SELECT
+  end_station_name,
+  COUNT(end_station_name) AS count_of_end
+FROM
+  (
+  SELECT
+    *
+  FROM
+    rs-project-01-429415.cyclistic_bike_data.annual_202309_202408_tripdata2
+  WHERE
+    member_casual LIKE 'member'
+  )
+GROUP BY
+  end_station_name
+ORDER BY 
+  2 DESC
+LIMIT
+  20;
+
+--Get member end latitude and longitude from TOP 20 start stations
+
+SELECT
+  popM.end_station_name,
+  ROUND(AVG(main.end_lat), 2) AS end_lat,
+  ROUND(AVG(main.end_lng), 2) AS end_lng
+FROM
+  rs-project-01-429415.cyclistic_bike_data.annual_202309_202408_tripdata2 AS main
+JOIN (SELECT
+  end_station_name,
+  COUNT(end_station_name) AS count_of_end
+FROM
+  (
+  SELECT
+    *
+  FROM
+    rs-project-01-429415.cyclistic_bike_data.annual_202309_202408_tripdata2
+  WHERE
+    member_casual LIKE 'member'
+  )
+  GROUP BY
+    end_station_name
+  ORDER BY 
+    2 DESC
+  LIMIT
+    20) AS popM
+ON
+  main.end_station_name = popM.end_station_name
+GROUP BY
+  popM.end_station_name;
+_______________________________
+--Most popular casual start stations 
+
+SELECT
+  start_station_name,
+  COUNT(start_station_name) AS count_of_start
+FROM
+  (
+  SELECT
+    *
+  FROM
+    rs-project-01-429415.cyclistic_bike_data.annual_202309_202408_tripdata2
+  WHERE
+    member_casual LIKE 'casual'
+  )
+GROUP BY
+  start_station_name
+ORDER BY 
+  2 DESC
+LIMIT
+  20;
+
+-- start station latitude and longitude from top 20 casual start stations
+
+SELECT
+  popM.start_station_name,
+  ROUND(AVG(main.start_lat), 2) AS start_lat,
+  ROUND(AVG(main.start_lng), 2) AS start_long
+FROM
+  rs-project-01-429415.cyclistic_bike_data.annual_202309_202408_tripdata2 AS main
+JOIN (SELECT
+  start_station_name,
+  COUNT(start_station_name) AS count_of_start
+FROM
+  (
+  SELECT
+    *
+  FROM
+    rs-project-01-429415.cyclistic_bike_data.annual_202309_202408_tripdata2
+  WHERE
+    member_casual LIKE 'casual'
+  )
+  GROUP BY
+    start_station_name
+  ORDER BY 
+    2 DESC
+  LIMIT
+    20) AS popM
+ON
+  main.start_station_name = popM.start_station_name
+GROUP BY
+  popM.start_station_name;
+_______________________________
+--most popular casual end station names
+
+SELECT
+  end_station_name,
+  COUNT(end_station_name) AS count_of_end
+FROM
+  (
+  SELECT
+    *
+  FROM
+    rs-project-01-429415.cyclistic_bike_data.annual_202309_202408_tripdata2
+  WHERE
+    member_casual LIKE 'casual'
+  )
+GROUP BY
+  end_station_name
+ORDER BY 
+  2 DESC
+LIMIT
+  20;
+
+ --Get casual end latitude and longitude from TOP 20 start stations
+
+SELECT
+  popM.end_station_name,
+  ROUND(AVG(main.end_lat), 2) AS end_lat,
+  ROUND(AVG(main.end_lng), 2) AS end_lng
+FROM
+  rs-project-01-429415.cyclistic_bike_data.annual_202309_202408_tripdata2 AS main
+JOIN (SELECT
+  end_station_name,
+  COUNT(end_station_name) AS count_of_end
+FROM
+  (
+  SELECT
+    *
+  FROM
+    rs-project-01-429415.cyclistic_bike_data.annual_202309_202408_tripdata2
+  WHERE
+    member_casual LIKE 'casual'
+  )
+  GROUP BY
+    end_station_name
+  ORDER BY 
+    2 DESC
+  LIMIT
+    20) AS popM
+ON
+  main.end_station_name = popM.end_station_name
+GROUP BY
+  popM.end_station_name;
+_______________________________
+
+--created concatenated column for routes to count popular routes.
+SELECT
+  CONCAT(start_station_name," TO ", end_station_name) AS route_concat
+FROM
+  rs-project-01-429415.cyclistic_bike_data.annual_202309_202408_tripdata2;
+
+
+
