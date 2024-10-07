@@ -1,25 +1,7 @@
 /* CREATED BY:RUBY SMITH
 CREATED ON: 10/04/2024
 GOAL: ANALYZE DATA BY POPULAR STATION NAMES AND PULL LATITUDE AND LONGITUDE FROM DATA BY USING JOIN */
-_______________________________
 
---use concat query in a subquery to find count of routes
-SELECT
-  route_concat,
-  COUNT(route_concat) AS count_of_route
-FROM
-  (
-    SELECT
-  CONCAT(start_station_name," TO ", end_station_name) AS route_concat
-FROM
-  rs-project-01-429415.cyclistic_bike_data.annual_202309_202408_tripdata2
-  )
-GROUP BY
-  route_concat
-ORDER BY
-  2 DESC
-LIMIT
- 20;
 _______________________________
 
 --most popular member start stations
@@ -236,5 +218,23 @@ SELECT
 FROM
   rs-project-01-429415.cyclistic_bike_data.annual_202309_202408_tripdata2;
 
+_______________________________
 
+--use concat query in a subquery to find count of routes
+SELECT
+  route_concat,
+  COUNT(route_concat) AS count_of_route
+FROM
+  (
+    SELECT
+  CONCAT(start_station_name," TO ", end_station_name) AS route_concat
+FROM
+  rs-project-01-429415.cyclistic_bike_data.annual_202309_202408_tripdata2
+  )
+GROUP BY
+  route_concat
+ORDER BY
+  2 DESC
+LIMIT
+ 20;
 
