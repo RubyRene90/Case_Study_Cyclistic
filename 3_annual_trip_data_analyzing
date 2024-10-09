@@ -85,9 +85,9 @@ SELECT
       member_casual LIKE 'casual'
   ) 
   * 100), 2) AS percent_of_members,
-  ROUND(AVG(trip_time_seconds), 2) AS annual_avg,
-  ROUND(MIN(trip_time_seconds), 2) AS annual_min,
-  ROUND(MAX(trip_time_seconds), 2) AS annual_max
+  ROUND(AVG(trip_time_seconds), 2) AS monthly_avg,
+  ROUND(MIN(trip_time_seconds), 2) AS monthly_min,
+  ROUND(MAX(trip_time_seconds), 2) AS monthly_max
 FROM
   `rs-project-01-429415.cyclistic_bike_data.annual_202309_202408_tripdata2`
 WHERE 
@@ -126,9 +126,9 @@ SELECT
       member_casual LIKE 'member'
   ) 
   * 100), 2) AS percent_of_members,
-  ROUND(AVG(trip_time_seconds), 2) AS annual_avg,
-  ROUND(MIN(trip_time_seconds), 2) AS annual_min,
-  ROUND(MAX(trip_time_seconds), 2) AS annual_max
+  ROUND(AVG(trip_time_seconds), 2) AS monthly_avg,
+  ROUND(MIN(trip_time_seconds), 2) AS monthly_min,
+  ROUND(MAX(trip_time_seconds), 2) AS monthly_max
 FROM
   `rs-project-01-429415.cyclistic_bike_data.annual_202309_202408_tripdata2`
 WHERE 
