@@ -1,6 +1,6 @@
 /*CREATED BY: RUBY SMITH
 CREATED ON: 10/02/2024
-GOAL: RUN AGGREGATE DATA ON WEEKLY RESULTS*/
+GOAL: RUN AGGREGATE DATA ON WEEKLY RESULTS AND QUARTERLY*/
 
 SELECT
   day_of_ride,
@@ -155,3 +155,90 @@ WHERE
   trip_time_seconds >= 10800 --change amount of time to count how many rides of that time
 GROUP BY
   member_casual;
+
+
+___________________________________________
+--check quarterly counts and average
+___________________________________________
+
+--First quarter, September - November, members vs. casuals
+SELECT
+  day_of_ride,
+  COUNT(member_casual) AS count_of_riders,
+  ROUND(AVG(trip_time_seconds), 2) AS quarterly_avg
+FROM
+  (
+  SELECT
+    *
+  FROM
+    `rs-project-01-429415.cyclistic_bike_data.annual_202309_202408_tripdata2`
+  WHERE
+    start_date BETWEEN '2023-09-01' AND '2023-11-30'
+    AND
+    member_casual LIKE 'member'  --change to update which member status
+  )  
+GROUP BY
+  day_of_ride;
+___________________________________________
+
+--Second quarter, December - February, members vs casuals.
+
+SELECT
+  day_of_ride,
+  COUNT(member_casual) AS count_of_riders,
+  ROUND(AVG(trip_time_seconds), 2) AS quarterly_avg
+FROM
+  (
+  SELECT
+    *
+  FROM
+    `rs-project-01-429415.cyclistic_bike_data.annual_202309_202408_tripdata2`
+  WHERE
+    start_date BETWEEN '2023-12-01' AND '2024-02-29'
+    AND
+    member_casual LIKE 'casual' --change to update which member status
+  )  
+GROUP BY
+  day_of_ride;
+___________________________________________
+
+--Third quarter, March - May, members vs casuals.
+
+SELECT
+  day_of_ride,
+  COUNT(member_casual) AS count_of_riders,
+  ROUND(AVG(trip_time_seconds), 2) AS quarterly_avg
+FROM
+  (
+  SELECT
+    *
+  FROM
+    `rs-project-01-429415.cyclistic_bike_data.annual_202309_202408_tripdata2`
+  WHERE
+    start_date BETWEEN '2024-03-01' AND '2024-05-31'
+    AND
+    member_casual LIKE 'casual' --change to update which member status
+  )  
+GROUP BY
+  day_of_ride;
+___________________________________________
+
+--Fourth quarter, June - August, members vs casuals.
+
+SELECT
+  day_of_ride,
+  COUNT(member_casual) AS count_of_riders,
+  ROUND(AVG(trip_time_seconds), 2) AS quarterly_avg
+FROM
+  (
+  SELECT
+    *
+  FROM
+    `rs-project-01-429415.cyclistic_bike_data.annual_202309_202408_tripdata2`
+  WHERE
+    start_date BETWEEN '2024-06-01' AND '2024-08-31'
+    AND
+    member_casual LIKE 'casual' --change to update which member status
+  )  
+GROUP BY
+  day_of_ride;
