@@ -2,12 +2,13 @@ This is a case study on coursera for a fictional company called Cyclistic Bike-S
 
 -SQL Queries (in order from start to finish, listed with files that begin with number)
 
-----Documentation for Case Study (link in file to google.doc)
+----Documentation for Case Study PDF
 
 ----Cyclistic Analyzed Data (link in file to google.sheet)
 
-----The Cyclistic analysis report (link in file google.doc)
+----The Cyclistic analysis report PDF
      The report includes links to everything as well.
      
-----Cyclistic Slide Presentation (link in file google.slide)
+----Cyclistic Slide Presentation PDF Version AND
+     (link in file google.slide along with tableau link for all visuals)
 
