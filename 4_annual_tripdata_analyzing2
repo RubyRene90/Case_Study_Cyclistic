@@ -126,6 +126,7 @@ WHERE
   AND
   trip_time_seconds < 10800; --change amount of time to count how many rides of that time
 
+
 SELECT
   member_casual,
   COUNT(member_casual)
@@ -146,6 +147,7 @@ FROM
 WHERE 
   trip_time_seconds >= 10800; --change amount of time to count how many rides of that time
 
+
 SELECT
   member_casual,
   COUNT(member_casual)
@@ -155,7 +157,6 @@ WHERE
   trip_time_seconds >= 10800 --change amount of time to count how many rides of that time
 GROUP BY
   member_casual;
-
 
 ___________________________________________
 --check quarterly counts and average
