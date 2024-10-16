@@ -9,5 +9,5 @@ This is a case study on coursera for a fictional company called Cyclistic Bike-S
 ----The Cyclistic analysis report (link in file google.doc)
      The report includes links to everything as well.
      
-----Cyclistic Slide Presentation (like in file google.slide)
+----Cyclistic Slide Presentation (link in file google.slide)
 
