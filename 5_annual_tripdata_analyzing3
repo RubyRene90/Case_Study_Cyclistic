@@ -23,6 +23,7 @@ ORDER BY
   2 DESC
 LIMIT
   20;
+_______________________________
 
 --Get member start latitude and longitude from TOP 20 start stations
 
@@ -75,7 +76,7 @@ ORDER BY
   2 DESC
 LIMIT
   20;
-
+_______________________________
 --Get member end latitude and longitude from TOP 20 start stations
 
 SELECT
@@ -127,6 +128,7 @@ ORDER BY
   2 DESC
 LIMIT
   20;
+_______________________________
 
 -- start station latitude and longitude from top 20 casual start stations
 
@@ -179,6 +181,7 @@ ORDER BY
   2 DESC
 LIMIT
   20;
+_______________________________
 
  --Get casual end latitude and longitude from TOP 20 start stations
 
