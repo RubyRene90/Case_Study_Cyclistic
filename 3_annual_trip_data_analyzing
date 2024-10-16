@@ -137,8 +137,7 @@ GROUP BY
   month
 ORDER BY
   month;
-  
-
+_____________________________________________________
 --separate members by bike type classic and electric
 SELECT
   FORMAT_DATE('%m', start_date) AS month,
