@@ -1,21 +1,21 @@
 /*CREATED BY: RUBY SMITH
 CREATED ON: 10/02/2024
-GOAL: RUN AGGREGATE DATA ON WEEKLY RESULTS AND QUARTERLY*/
+GOAL: RUN AGGREGATE DATA ON WEEKDAY RESULTS AND QUARTERLY*/
 
+--QUERY SHOWS TOTAL COUNT OF RIDES TAKEN EACH DAY OF THE WEEK
 SELECT
   day_of_ride,
   COUNT(day_of_ride)
 FROM
   rs-project-01-429415.cyclistic_bike_data.annual_202309_202408_tripdata2
 GROUP BY
-  day_of_ride
+  1
 ORDER BY
-  day_of_ride;
+  1;
 ___________________________________________
---analyze weekly by membership
+--ANALYZE WEEEKDAYS BY CASUALS VS MEMBERSHIPS
 ___________________________________________
-
---casual(nonmembership)
+--CASUAL RIDERS WEEKDAY AGGREGATES
 SELECT
   day_of_ride,
   COUNT(day_of_ride) AS CountOfRides,
@@ -27,11 +27,12 @@ FROM
 WHERE
   member_casual LIKE 'casual'
 GROUP BY
-  day_of_ride
+  1
 ORDER BY
-  day_of_ride;
+  1;
 
---find rideable_type for casuals: classic vs electric
+
+--QUERY BELOW SHOWS HOW MANY OF EACH BIKE TYPE WAS USED BY CASUAL RIDERS EACH DAY OF THE WEEK
 SELECT
   day_of_ride,
   COUNT(rideable_type)
@@ -40,14 +41,14 @@ FROM
 WHERE
   member_casual LIKE 'casual'
   AND
-  rideable_type LIKE 'electric_bike'
+  rideable_type LIKE 'electric_bike'  --CHANGE TYPE FOR OTHER RESULTS
 GROUP BY
-  day_of_ride
+  1
 ORDER BY
-  day_of_ride;
-___________________________________________
+  1;
 
---membership
+___________________________________________
+--MEMBERSHIP RIDERS WEEKDAY AGGREGATES
 SELECT
   day_of_ride,
   COUNT(day_of_ride) AS CountOfRides,
@@ -59,11 +60,12 @@ FROM
 WHERE
   member_casual LIKE 'member'
 GROUP BY
-  day_of_ride
+  1
 ORDER BY
-  day_of_ride;
+  1;
 
---find rideable_type for members: classic vs electric
+
+--QUERY BELOW SHOWS HOW MANY OF EACH BIKE TYPE WAS USED BY MEMBERSHIP RIDERS EACH DAY OF THE WEEK
 SELECT
   day_of_ride,
   COUNT(rideable_type)
@@ -72,49 +74,13 @@ FROM
 WHERE
   member_casual LIKE 'member'
   AND
-  rideable_type LIKE 'classic_bike'
+  rideable_type LIKE 'classic_bike'  --CHANGE TYPE FOR OTHER RESULTS
 GROUP BY
-  day_of_ride
+  1
 ORDER BY
-  day_of_ride;
+  1;
 ___________________________________________
---used to calculate how many riders are above or below avg.
-___________________________________________
---members
-SELECT
-  COUNT(member_casual) AS count_of_riders
-FROM
-  `rs-project-01-429415.cyclistic_bike_data.annual_202309_202408_tripdata2`
-WHERE
-  trip_time_seconds <   --change sign to get opposite results
-  (
-    SELECT
-      AVG(trip_time_seconds)
-    FROM
-      `rs-project-01-429415.cyclistic_bike_data.annual_202309_202408_tripdata2`
-    WHERE
-      member_casual LIKE 'member'
-  )
-  AND
-    member_casual LIKE 'member';
-___________________________________________
---casuals
-SELECT
-  COUNT(member_casual) AS count_of_riders
-FROM
-  `rs-project-01-429415.cyclistic_bike_data.annual_202309_202408_tripdata2`
-WHERE
-  trip_time_seconds >    --change sign to get opposite results.
-  (
-    SELECT
-      AVG(trip_time_seconds)
-    FROM
-      `rs-project-01-429415.cyclistic_bike_data.annual_202309_202408_tripdata2`
-    WHERE
-      member_casual LIKE 'casual'
-  )
-  AND
-    member_casual LIKE 'casual';
+--CHECKING DIFFERENT TIME INTERVALS AND THE COUNT OF RIDERS IN EACH
 ___________________________________________
 --checking how many people are below 1, 1-5, and 5-10 min of usage, etc.
 SELECT
@@ -137,7 +103,7 @@ WHERE
   and
   trip_time_seconds < 10800     --change amount of time to count how many rides of that time
 GROUP BY
-  member_casual;
+  1;
 ___________________________________________
 --checking how many people are at or above 3hr of usage.
 SELECT
@@ -156,13 +122,12 @@ FROM
 WHERE 
   trip_time_seconds >= 10800 --change amount of time to count how many rides of that time
 GROUP BY
-  member_casual;
+  1;
 
 ___________________________________________
---check quarterly counts and average
+--QUARTERLY AGGREGATES
 ___________________________________________
-
---First quarter, September - November, members vs. casuals
+--1ST QUARTER, SEPTEMBER - NOVEMBER, MEMBERSHIP RIDERS VS CASUAL RIDERS
 SELECT
   day_of_ride,
   COUNT(member_casual) AS count_of_riders,
@@ -176,14 +141,13 @@ FROM
   WHERE
     start_date BETWEEN '2023-09-01' AND '2023-11-30'
     AND
-    member_casual LIKE 'member'  --change to update which member status
+    member_casual LIKE 'member'    --CHANGE TO UPDATE RIDER STATUS
   )  
 GROUP BY
-  day_of_ride;
-___________________________________________
+  1;
 
---Second quarter, December - February, members vs casuals.
 
+--2ND QUARTER, DECEMBER - FEBRUARY, MEMBERSHIP RIDERS VS CASUAL RIDERS
 SELECT
   day_of_ride,
   COUNT(member_casual) AS count_of_riders,
@@ -197,14 +161,13 @@ FROM
   WHERE
     start_date BETWEEN '2023-12-01' AND '2024-02-29'
     AND
-    member_casual LIKE 'casual' --change to update which member status
+    member_casual LIKE 'casual'    --CHANGE TO UPDATE RIDER STATUS
   )  
 GROUP BY
-  day_of_ride;
-___________________________________________
+  1;
 
---Third quarter, March - May, members vs casuals.
 
+--3RD QUARTER, MARCH - MAY, MEMBERSHIP RIDERS VS CASUAL RIDERS
 SELECT
   day_of_ride,
   COUNT(member_casual) AS count_of_riders,
@@ -218,14 +181,13 @@ FROM
   WHERE
     start_date BETWEEN '2024-03-01' AND '2024-05-31'
     AND
-    member_casual LIKE 'casual' --change to update which member status
+    member_casual LIKE 'casual'    --CHANGE TO UPDATE RIDER STATUS
   )  
 GROUP BY
-  day_of_ride;
-___________________________________________
+  1;
 
---Fourth quarter, June - August, members vs casuals.
 
+--4TH QUARTER, JUNE - AUGUST, MEMBERSHIP RIDERS VS CASUAL RIDERS
 SELECT
   day_of_ride,
   COUNT(member_casual) AS count_of_riders,
@@ -239,7 +201,7 @@ FROM
   WHERE
     start_date BETWEEN '2024-06-01' AND '2024-08-31'
     AND
-    member_casual LIKE 'casual' --change to update which member status
+    member_casual LIKE 'casual'    --CHANGE TO UPDATE RIDER STATUS
   )  
 GROUP BY
-  day_of_ride;
+  1;
