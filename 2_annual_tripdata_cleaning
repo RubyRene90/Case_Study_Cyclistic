@@ -1,7 +1,8 @@
 /* CREATED BY: RUBY SMITH
 CREATED ON: 09/26/2024
-GOAL: Understand annual_tripdata*/
+GOAL: Understand and clean annual_tripdata*/
 
+--PULLING UP SAMPLE OF DATA FROM NEW TABLE CREATED
 SELECT
   *
 FROM
@@ -9,32 +10,30 @@ FROM
 LIMIT
 50;
 _______________________________________________
---Used to check dates were downloaded and all months are present.
---Count represents the amount of results after nulls removed from each dataset.
-
+--QUERY USED TO PULL MONTHS FROM DATA AND MAKE SURE ALL MONTHS ARE PRESENT IN NEW TABLE
+--USED COUNT TO MAKE SURE ALL ROWS WERE UNIONED. COUNT REPRESENTS RESULTS AFTER NULLS WERE REMOVED.
 SELECT
   EXTRACT(MONTH FROM started_at),
   COUNT(EXTRACT(MONTH FROM started_at))
 FROM
   rs-project-01-429415.cyclistic_bike_data.annual_202309_202408_tripdata
 GROUP BY
-  EXTRACT(MONTH FROM started_at);
+  1;
 _______________________________________________
---checking for duplicates (171 duplicated ride_id)
-
+--CHECKING FOR DUPLICATES (171 DUPLICATES)
 SELECT
   ride_id,
   COUNT(ride_id)
 FROM
   rs-project-01-429415.cyclistic_bike_data.annual_202309_202408_tripdata
 GROUP BY
-  ride_id
+  1
 HAVING
   COUNT(ride_id) > 1;
 
---Query below shows all duplicates
---all entries that were from 5/31 and went through 6/01 duplicated. 
 
+--QUERY BELOW SHOWS ALL COLUMNS OF DUPLICATED DATA, ROWS ARE THE SAME.
+--ALL DUPLICATED ENTRIES WERE FROM 05/31 AND WENT THROUGH 06/01.
 SELECT
   annual.*
 FROM
@@ -45,7 +44,7 @@ FROM
   FROM
     rs-project-01-429415.cyclistic_bike_data.annual_202309_202408_tripdata
   GROUP BY
-    ride_id
+    1
   HAVING
     COUNT(ride_id) > 1
 ) AS dupl
@@ -56,8 +55,18 @@ dupl.ride_id = annual.ride_id
 ORDER BY
   annual.ride_id;
 
---Partitioned to create rank to seperate duplicates. Filtered out duplicates and created an updated table.
 
+--PARTITIONED DATA TO CREATE RANK TO SEPARATE DUPLICATES, DUPLICATED DATA HAS 'r_n' VALUE OF 2.
+SELECT
+  *,
+  ROW_NUMBER() OVER 
+    (PARTITION BY
+      ride_id) AS r_n
+FROM
+  rs-project-01-429415.cyclistic_bike_data.annual_202309_202408_tripdata;
+
+
+--CREATE TABLE THAT FILTERS OUT DUPLICATED DATA
 CREATE TABLE rs-project-01-429415.cyclistic_bike_data.annual_202309_202408_tripdata2 AS
 SELECT
   ride_id,
@@ -90,7 +99,7 @@ _______________________________________________
 CREATED ON: 9/27/2024
 GOAL: start manipulating the data */
 
---I want to isolate the 'trip time' of each bike ride.
+--QUERY BELOW ISOLATES THE 'TRIP TIME' OF EACH BIKE RIDE IN SECONDS (SAMPLE)
 SELECT
   started_at,
   ended_at,
@@ -102,17 +111,17 @@ ORDER BY
 LIMIT
   1000;
 
---I will add new column named 'trip_time_seconds' to annual dataset with trip time added for each row.
 
+--I ALTERED TABLE TO CREATE NEW COLUMN FOR 'TRIP TIME' IN SECONDS
 ALTER TABLE rs-project-01-429415.cyclistic_bike_data.annual_202309_202408_tripdata2
 ADD COLUMN trip_time_seconds INT64;
 
 UPDATE rs-project-01-429415.cyclistic_bike_data.annual_202309_202408_tripdata2
 SET trip_time_seconds = TIMESTAMP_DIFF(ended_at, started_at, second)
 WHERE trip_time_seconds IS NULL;
-_______________________________________________
---I want to isolate the date datatype from timestamp datatype in the started_at and ended_at columns.
 
+_______________________________________________
+--I CAST TIMESTAMP COLUMNS AS DATE COLUMNS TO BEGIN ISOLATING JUST THE DATE.
 SELECT 
  CAST(started_at AS DATE),
  CAST(ended_at AS DATE)
@@ -121,7 +130,8 @@ FROM
 LIMIT
   1000;
 
---Creating 2 new columns for separated start_date and end_date
+
+--I ALTERED TABLE TO CREATE TWO NEW COLUMNS TO PULL DATE FROM 'started_at' AND 'ended_at' COLUMNS
 ALTER TABLE rs-project-01-429415.cyclistic_bike_data.annual_202309_202408_tripdata2
 ADD COLUMN start_date DATE,
 ADD COLUMN end_date DATE;
@@ -133,19 +143,18 @@ SET
 WHERE
  start_date IS NULL
  AND end_date IS NULL;
-_______________________________________________
 
---Use below query to double check if trip_time what calculated correctly between dates.
+_______________________________________________
+--QUERY BELOW WAS USED TO DOUBLE CHECK 'trip time' BETWEEN DATES WAS CALCULATED CORRECTLY
 SELECT
   *
 FROM 
   rs-project-01-429415.cyclistic_bike_data.annual_202309_202408_tripdata2
 WHERE
   start_date <> end_date;
+
 _______________________________________________
-
---Create a column with days of the week from start_date.
-
+--I WANTED TO PULL 'DAY OF THE WEEK' FOR EACH BIKE TRIP TAKEN, (SAMPLE)
 SELECT
   start_date,
   FORMAT_DATE('%A', start_date)
@@ -154,6 +163,8 @@ FROM
 LIMIT
 50;
 
+
+--I ALTERED TABLE TO CREATE A NEW COLUMN FOR DAY OF THE WEEK
 ALTER TABLE rs-project-01-429415.cyclistic_bike_data.annual_202309_202408_tripdata2
 ADD COLUMN day_of_ride STRING;
 
