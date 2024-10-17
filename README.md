@@ -13,3 +13,5 @@ This is a case study on coursera for a fictional company called Cyclistic Bike-S
 ----Cyclistic Slide Presentation PDF Version AND
      (link in file google.slide along with tableau link for all visuals)
 
+----BigQuery Dataset location: https://console.cloud.google.com/bigquery?ws=!1m4!1m3!3m2!1srs-project-01-429415!2scyclistic_bike_data     
+
