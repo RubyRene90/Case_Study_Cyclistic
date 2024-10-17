@@ -3,25 +3,25 @@ CREATED ON: 09/24/2024
 GOAL: EXPLORE DATASETS FOR CYCLISTIC BIKE DATA. USING 202309_tripdata.*/
 ____________________________________________________
 
---CHECKING NULL VALUES IN START AND END LOCATIONS
+--CHECKING NULL VALUES IN 'START_STATION_NAME' COLUMN (101312 results)
 SELECT
   *
 FROM
   rs-project-01-429415.cyclistic_bike_data.202309_tripdata
 WHERE
   start_station_name IS NULL;
---101312 results
 
 
+--CHECKING NULL VALUES IN 'END_STATION_NAME' COLUMN (107291 results)
 SELECT
   *
 FROM
   rs-project-01-429415.cyclistic_bike_data.202309_tripdata
 WHERE
   end_station_name IS NULL;
---107291 results
 
 
+--CHECKING NULL VALUES FOR LATITUDE AND LONGITUDE (STARTING), I CAN USE LOCATIONS AS LONG AS I HAVE VALUES FOR LONGITUDE AND LATITUDE.
 SELECT
   *
 FROM
@@ -32,6 +32,7 @@ WHERE
   start_lng IS NULL;
 
 
+--CHECKING NULL VALUES FOR LATITUDE AND LONGITUDE (ENDING), 838 RESULTS. DID CUSTOMERS FORGET TO END RIDE OR WAS THERE AN ISSUE WITH GETTING DATA?
 SELECT
   *
 FROM
@@ -40,10 +41,9 @@ WHERE
   end_lat IS NULL
   OR
   end_lng IS NULL;
---838 results, did customer forget to end ride?
---for stops with missing latitude and longitude, should these be left out?
 
 
+--CHECKING TO SEE HOW MANY OF EACH TYPE OF RIDER HAS A NULL VALUE FOR LATITUDE AND LONGITUDE IF THERE IS A TREND. RESULTS: 698 CASUAL, 140 MEMBERSHIPS
 SELECT
   member_casual,
   COUNT(member_casual) AS ride_count
@@ -55,11 +55,9 @@ WHERE
   end_lng IS NULL
 GROUP BY
   1;
---698 casual, 140 memberships who 'didnt end trip'
---Is this an important trend?
 ____________________________________________________
-
---checking the difference in count of membership rides vs non-membership rides (casual)
+--CHECKING THE DIFFERENCE IN COUNT OF MEMBERSHIP RIDES VS CASUAL RIDES
+--TOTAL 666731, CASUAL 261635 (39.3%), MEMBERSHIP 404736 (60.7%)
 SELECT
   member_casual,
   COUNT(member_casual) AS ride_count,
@@ -74,9 +72,9 @@ FROM
   rs-project-01-429415.cyclistic_bike_data.202309_tripdata
 GROUP BY
   1;
---Total 666731, 261635 casual 39.3%, 404736 memberships 60.7% 
 
-
+____________________________________________________
+--CHECKING RIDEABLE TYPES AND IF MEMBERSHIP RIDERS AND CASUAL RIDERS HAVE A PREFERENCE 
 SELECT
   member_casual,
   rideable_type,
@@ -87,18 +85,17 @@ SELECT
     COUNT(member_casual) 
     FROM rs-project-01-429415.cyclistic_bike_data.202309_tripdata
   ) 
-  * 100), 2) AS percent_of_members
+  * 100), 2) AS percent_of_rides
 FROM
   rs-project-01-429415.cyclistic_bike_data.202309_tripdata
 GROUP BY
   1,
   2;
---Query shows difference in 'rideable_type' doesn't change percentage of memberships for the Month of September.
 ____________________________________________________
 
 /* Created By: Ruby Smith
 Created On: 09/26/2024
-Goal: Use UNION ALL to combine datasets and create new table */
+Goal: Use UNION ALL to combine 12 MONTHS of datasets and create new table */
 
 --Total results BEFORE removing latitude and longitude NULLs: 5,699,639
 --Total results AFTER removing latitude and longitude NULLs: 5,692,113 (7526 entries removed)
