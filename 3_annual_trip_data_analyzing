@@ -2,7 +2,7 @@
 CREATED ON: 10/01/2024
 GOAL: RUN SOME BASIC AGGREGATE DATA AND IMPORT RESULTS INTO GOOGLE SHEETS FOR ANALYSIS*/
 
---annual results
+--ANNUAL RESULTS OF AGGREGATED DATA (OVERALL)
 SELECT
   COUNT(member_casual) AS member_count,
   ROUND(AVG(trip_time_seconds), 2) AS annual_avg,
@@ -10,8 +10,9 @@ SELECT
   ROUND(MAX(trip_time_seconds), 2) AS annual_max
 FROM
   `rs-project-01-429415.cyclistic_bike_data.annual_202309_202408_tripdata2`;
-______________________________________________________
---annual results grouped by member_casual
+
+
+--ANNUAL RESULTS OF AGGREGATED DATA (SEPARATED BY RIDER TYPE: MEMBERS VS CASUALS)
 SELECT
   member_casual AS member_status,
   COUNT(member_casual) AS member_count,
@@ -28,51 +29,56 @@ SELECT
 FROM
   `rs-project-01-429415.cyclistic_bike_data.annual_202309_202408_tripdata2`
 GROUP BY
-  member_casual;
+  1;
 ______________________________________________________
-
+--THE MINIMUM TRIP TIME IS NEGATIVE, ISSUE WITH TIME ENTRIES (344 ROWS)
 SELECT
   *
 FROM
   rs-project-01-429415.cyclistic_bike_data.annual_202309_202408_tripdata2
 WHERE 
   trip_time_seconds < 0;
---The MIN trip time was negative, issue with ride entry. 344 Rows
 
+
+--REMOVED ROWS WITH NEGATIVE TRIP TIME AFTER VERIFYING COLUMNS WERE CORRECT IN ORIGINAL DATA TABLES. 
 DELETE
   rs-project-01-429415.cyclistic_bike_data.annual_202309_202408_tripdata2
 WHERE
 trip_time_seconds < 0;
---Removed rows with negative trip time after verifying original columns, started_at and ended_at
+
 ______________________________________________________
+--THE MAXIMUM TRIP TIME WAS OVER 24 HOURS LONG (389 ROWS)
 SELECT
   *
 FROM
   rs-project-01-429415.cyclistic_bike_data.annual_202309_202408_tripdata2
 WHERE 
   trip_time_seconds > 86400;
---The MAX trip time was over 24 hours long, wanted to look into. 389 rows over 24 hours.
 
+
+-- REMOVED ROWS WITH TRIP TIME OVER 24 HOURS AFTER VERIFYING COLUMNS WERE CORRECT IN ORIGINAL DATA TABLES.
+-- MY DATA TABLE WILL SHOW RESULTS OF TRIPS THAT ARE WITHIN 24 HOURS
 DELETE
   rs-project-01-429415.cyclistic_bike_data.annual_202309_202408_tripdata2
 WHERE
 trip_time_seconds > 86400;
---Removed rows with trip time over 24 hours after verifyinf original columns, started_at and ended_at
+
 ______________________________________________________
---count of bike type used annually
+--CHECKING ANNUAL USE OF BIKE TYPES.
 SELECT
   member_casual,
   COUNT(rideable_type)
 FROM
   `rs-project-01-429415.cyclistic_bike_data.annual_202309_202408_tripdata2`
 WHERE
-  rideable_type LIKE 'electric_bike'
+  rideable_type LIKE 'electric_bike' --CHANGE TYPE FOR OTHER RESULTS
 GROUP BY
-  member_casual;
+  1;
+
 ______________________________________________________
---Run aggregates monthly, by membership.
+--MONTHLY AGGREGATES
 ______________________________________________________
---Casual Riders aggregations
+--BELOW QUERY SHOWS AGGREGATED DATA BROKEN DOWN MONTHLY FOR CASUAL RIDERS ONLY
 SELECT
   FORMAT_DATE('%m', start_date) AS month,
   COUNT(member_casual) AS member_count,
@@ -98,7 +104,7 @@ ORDER BY
   month;
 
 
---separate casual rides by bike type classic and electric
+--QUERY SHOWS HOW MANY CASUAL RIDERS PICKED A SPECIFIC BIKE TYPE
 SELECT
   FORMAT_DATE('%m', start_date) AS month,
   COUNT(rideable_type)
@@ -107,13 +113,14 @@ FROM
 WHERE
   member_casual LIKE 'casual'
   AND
-  rideable_type LIKE 'classic_bike'
+  rideable_type LIKE 'classic_bike'  --CHANGE TYPE FOR OTHER RESULTS
 GROUP BY
 month
 ORDER BY
 month;
+
 ______________________________________________________
---Membership Aggregates
+--BELOW QUERY SHOWS AGGREGATED DATA BROKEN DOWN MONTHLY FOR MEMBERSHIP RIDERS ONLY
 SELECT
   FORMAT_DATE('%m', start_date) AS month,
   COUNT(member_casual) AS member_count,
@@ -137,8 +144,9 @@ GROUP BY
   month
 ORDER BY
   month;
-_____________________________________________________
---separate members by bike type classic and electric
+
+
+--QUERY SHOWS HOW MANY MEMBERSHIP RIDERS PICKED A SPECIFIC BIKE TYPE
 SELECT
   FORMAT_DATE('%m', start_date) AS month,
   COUNT(rideable_type)
@@ -147,7 +155,7 @@ FROM
 WHERE
   member_casual LIKE 'member'
   AND
-  rideable_type LIKE 'classic_bike'
+  rideable_type LIKE 'classic_bike'  ---CHANGE TYPE FOR OTHER RESULTS
 GROUP BY
 month
 ORDER BY
